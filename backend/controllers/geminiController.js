@@ -1,7 +1,9 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { GoogleGenAI } = require("@google/genai");
 
 // Initialize Gemini AI with API key from environment
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+const ai = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY || ""
+});
 
 /**
  * Analyze a startup idea and provide AI-powered feedback
@@ -13,8 +15,6 @@ const analyzeIdea = async (req, res) => {
     if (!title || !description) {
       return res.status(400).json({ error: "Title and description are required" });
     }
-
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
     const prompt = `As a startup advisor, analyze the following startup idea and provide detailed feedback:
 
@@ -32,13 +32,14 @@ Please provide:
 
 Format the response in clear sections.`;
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const analysis = response.text();
+    const response = await ai.models.generateContent({
+      model: "gemini-2.0-flash-exp",
+      contents: prompt
+    });
 
     res.json({
       success: true,
-      analysis: analysis,
+      analysis: response.text,
       ideaTitle: title
     });
 
@@ -61,8 +62,6 @@ const matchDevelopers = async (req, res) => {
     if (!ideaDescription || !developers || developers.length === 0) {
       return res.status(400).json({ error: "Idea description and developers list are required" });
     }
-
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
     const developersInfo = developers.map((dev, index) =>
       `Developer ${index + 1}:
@@ -88,13 +87,14 @@ Please provide:
 
 Format as a structured analysis.`;
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const matching = response.text();
+    const response = await ai.models.generateContent({
+      model: "gemini-2.0-flash-exp",
+      contents: prompt
+    });
 
     res.json({
       success: true,
-      matching: matching,
+      matching: response.text,
       totalDevelopers: developers.length
     });
 
@@ -118,8 +118,6 @@ const evaluateProposal = async (req, res) => {
       return res.status(400).json({ error: "Proposal text is required" });
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-
     const prompt = `As a business advisor, evaluate this collaboration proposal:
 
 Proposal: ${proposalText}
@@ -137,13 +135,14 @@ Please provide:
 
 Provide a balanced, professional evaluation.`;
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const evaluation = response.text();
+    const response = await ai.models.generateContent({
+      model: "gemini-2.0-flash-exp",
+      contents: prompt
+    });
 
     res.json({
       success: true,
-      evaluation: evaluation
+      evaluation: response.text
     });
 
   } catch (error) {
@@ -166,8 +165,6 @@ const getMarketInsights = async (req, res) => {
       return res.status(400).json({ error: "Category is required" });
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-
     const prompt = `As a market research analyst, provide insights for the ${category} startup sector${ideaTitle ? ` (specifically for: ${ideaTitle})` : ""}:
 
 Please provide:
@@ -180,13 +177,14 @@ Please provide:
 
 Provide data-driven, actionable insights.`;
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const insights = response.text();
+    const response = await ai.models.generateContent({
+      model: "gemini-2.0-flash-exp",
+      contents: prompt
+    });
 
     res.json({
       success: true,
-      insights: insights,
+      insights: response.text,
       category: category
     });
 
@@ -210,8 +208,6 @@ const suggestNames = async (req, res) => {
       return res.status(400).json({ error: "Description is required" });
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-
     const prompt = `Generate 10 creative, memorable startup names based on:
 
 Description: ${description}
@@ -226,13 +222,14 @@ Requirements:
 
 Provide the list in a clear format.`;
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const suggestions = response.text();
+    const response = await ai.models.generateContent({
+      model: "gemini-2.0-flash-exp",
+      contents: prompt
+    });
 
     res.json({
       success: true,
-      suggestions: suggestions
+      suggestions: response.text
     });
 
   } catch (error) {
