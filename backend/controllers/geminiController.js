@@ -14,7 +14,7 @@ const analyzeIdea = async (req, res) => {
       return res.status(400).json({ error: "Title and description are required" });
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
     const prompt = `As a startup advisor, analyze the following startup idea and provide detailed feedback:
 
@@ -62,7 +62,7 @@ const matchDevelopers = async (req, res) => {
       return res.status(400).json({ error: "Idea description and developers list are required" });
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
     const developersInfo = developers.map((dev, index) =>
       `Developer ${index + 1}:
@@ -118,7 +118,7 @@ const evaluateProposal = async (req, res) => {
       return res.status(400).json({ error: "Proposal text is required" });
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
     const prompt = `As a business advisor, evaluate this collaboration proposal:
 
@@ -166,7 +166,7 @@ const getMarketInsights = async (req, res) => {
       return res.status(400).json({ error: "Category is required" });
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
     const prompt = `As a market research analyst, provide insights for the ${category} startup sector${ideaTitle ? ` (specifically for: ${ideaTitle})` : ""}:
 
@@ -210,7 +210,7 @@ const suggestNames = async (req, res) => {
       return res.status(400).json({ error: "Description is required" });
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
     const prompt = `Generate 10 creative, memorable startup names based on:
 
